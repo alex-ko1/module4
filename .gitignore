@@ -25,6 +25,10 @@
 /web/modules/custom/Alex/src/Form/AlexForm.php
 /web/modules/custom/Alex/src/Form/SecondForm.php
 
+/.docksal
+/config
+LICENSE
+
 # OS generated files #
 ######################
 .DS_Store
