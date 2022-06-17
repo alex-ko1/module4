@@ -21,3 +21,12 @@
 
 # Ignore .env files as they are personal
 /.env
+
+/web/modules/custom/Alex/src/Form/AlexForm.php
+/web/modules/custom/Alex/src/Form/SecondForm.php
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+DS_Store

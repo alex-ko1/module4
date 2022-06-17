@@ -1,0 +1,6 @@
+name: alex
+description: 'Provides an alex form table'
+type: module
+core: 8.x
+package: custom
+core_version_requirement: ^8 || ^9

@@ -1,0 +1,14 @@
+tr td input{
+  width: 65px;
+}
+#sidebar-first{
+  display: none;
+}
+main#content{
+  margin-left: 0;
+  width: 105%;
+}
+#main-wrapper{
+  margin: 0;
+}
+
