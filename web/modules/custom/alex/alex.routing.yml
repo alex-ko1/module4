@@ -1,9 +1,6 @@
 alex.content:
   path: '/alex'
   defaults:
-    #_controller: '\Drupal\alex\Controller\AlexController::content'
-    #_form: '\Drupal\alex\Form\AlexForm'
-    #_form: '\Drupal\alex\Form\SecondForm'
     _form: '\Drupal\alex\Form\ExampleForm'
     _title: 'Form table'
   requirements:

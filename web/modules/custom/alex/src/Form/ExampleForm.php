@@ -211,31 +211,7 @@ class ExampleForm extends FormBase {
       }
     }
     $form_state->setRebuild();
-
-    /*for ($i = 0; $i < $this->tables; $i++) {
-    for ($b = 0; $b < $this->rows; $b++) {
-    $valueJan = $form[$i][$b][1]['#value'];
-    $valueFeb = $form[$i][$b][2]['#value'];
-    $valueMar = $form[$i][$b][3]['#value'];
-    $valueApr = $form[$i][$b][5]['#value'];
-    $valueMay = $form[$i][$b][6]['#value'];
-    $valueJun = $form[$i][$b][7]['#value'];
-    $valueJul = $form[$i][$b][9]['#value'];
-    $valueAug = $form[$i][$b][10]['#value'];
-    $valueSep = $form[$i][$b][11]['#value'];
-    $valueOct = $form[$i][$b][13]['#value'];
-    $valueNov = $form[$i][$b][14]['#value'];
-    $valueDec = $form[$i][$b][15]['#value'];
-    $q1 = round((($valueJan + $valueFeb + $valueMar + 1) / 3), 2);
-    $q2 = round((($valueApr + $valueMay + $valueJun + 1) / 3), 2);
-    $q3 = round((($valueJul + $valueAug + $valueSep + 1) / 3), 2);
-    $q4 = round((($valueOct + $valueNov + $valueDec + 1) / 3), 2);
-    $sum_year = round((($q1 + $q2 + $q3 + $q4 + 1) / 4), 2);
-    $form[$i][4]['#value'] = $q1;
-
-    }
-    }*/
-    \Drupal::messenger()->addMessage('Form is valid! ' . $row['jan'] . ' , ' . $q1);
+    \Drupal::messenger()->addMessage('Form is valid! ');
   }
 
   /**
@@ -260,38 +236,27 @@ class ExampleForm extends FormBase {
    * Validate form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-    // Getting values.
     $data = $form_state->getValues();
-    // Array for all tables values.
     $tablesValues = [];
     for ($i = 0; $i < $this->tables; $i++) {
-      // Update array.
       $values = $this->updatedArray($data[$i]);
-      // Pass values off current table.
       $tablesValues[] = $values;
-      // Calculate number of active cells.
       $months = $this->rows * 12;
-      // Variable for position of filled cells.
       $position = [];
-      // Count of filled cells.
       $nonEmpty = 0;
-      // Cycle for getting positions of filled cells.
       for ($q = 0; $q < $months; $q++) {
         if ($values[$q] !== 0) {
           $position[] = $q;
           $nonEmpty++;
         }
       }
-      // Cycle for comparison of position.
       for ($k = 0; $k < $nonEmpty - 1; $k++) {
-        // Check that there are not gaps between two values.
         $difference = $position[$k + 1] - $position[$k];
         if ($difference != 1) {
-          $form_state->setErrorByName($k, 'Gap');
+          $form_state->setErrorByName($k, 'The gap between values');
         }
       }
     }
-    // Cycle for checking similarity of tables.
     for ($i = 0; $i < $this->tables - 1; $i++) {
       if ($tablesValues[$i] != $tablesValues[$i + 1]) {
         $form_state->setErrorByName($i, 'Tables are not the same!');
