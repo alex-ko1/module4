@@ -15,9 +15,11 @@ class ExampleForm extends FormBase {
    *
    * @var array
    */
-  protected array $Header;
+  protected array $header;
 
   /**
+   * An array with quarter and year cells.
+   *
    * @var array
    */
   protected array $calculatedCells;
@@ -54,7 +56,7 @@ class ExampleForm extends FormBase {
    * Create table head.
    */
   public function buildHeader() {
-    $this->Header = [
+    $this->header = [
       'year' => $this->t("Year"),
       'jan' => $this->t("Jan"),
       'feb' => $this->t("Feb"),
@@ -99,7 +101,7 @@ class ExampleForm extends FormBase {
         '#type' => 'table',
         '#caption' => $this
           ->t('Simple Table'),
-        '#header' => $this->Header,
+        '#header' => $this->header,
       ];
       $this->buildRows($table_id, $form[$table_id], $form_state);
     }
@@ -142,7 +144,7 @@ class ExampleForm extends FormBase {
    */
   public function buildRows($table_id, array &$table, FormStateInterface $form_state) {
     for ($i = 0; $i < $this->rows; $i++) {
-      foreach ($this->Header as $key => $value) {
+      foreach ($this->header as $key => $value) {
         $table[$i][$key] = [
           '#type' => 'number',
         ];
@@ -160,7 +162,7 @@ class ExampleForm extends FormBase {
   /**
    * Button for adding a new row.
    */
-  public function addRow(array &$form, FormStateInterface $form_state) {
+  public function addRow(array $form, FormStateInterface $form_state) {
     $this->rows++;
     $form_state->setRebuild();
     return $form;
@@ -169,7 +171,7 @@ class ExampleForm extends FormBase {
   /**
    * Button for adding a new table.
    */
-  public function addTable(array &$form, FormStateInterface $form_state) {
+  public function addTable(array $form, FormStateInterface $form_state) {
     $this->tables++;
     $form_state->setRebuild();
     return $form;
@@ -211,13 +213,13 @@ class ExampleForm extends FormBase {
       }
     }
     $form_state->setRebuild();
-    \Drupal::messenger()->addMessage('Form is valid! ');
+    \Drupal::messenger()->addMessage('Form is valid!');
   }
 
   /**
    * Build updated array after submit.
    */
-  public function UpdatedArray($array) {
+  public function updatedArray($array): array {
     $values = [];
     for ($i = 0; $i < $this->rows; $i++) {
       foreach ($array[$i] as $key => $value) {
