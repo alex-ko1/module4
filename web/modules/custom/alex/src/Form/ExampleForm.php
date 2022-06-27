@@ -25,13 +25,6 @@ class ExampleForm extends FormBase {
   protected array $calculatedCells;
 
   /**
-   * Number of year.
-   *
-   * @var int
-   */
-  protected int $year = 2022;
-
-  /**
    * Number of row.
    *
    * @var int
@@ -87,6 +80,8 @@ class ExampleForm extends FormBase {
   }
 
   /**
+   * Function to building form.
+   *
    * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
@@ -106,7 +101,7 @@ class ExampleForm extends FormBase {
       $this->buildRows($table_id, $form[$table_id], $form_state);
     }
 
-    $form['addRow'] = [
+    $form['add_row'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add Year'),
       '#submit' => [
@@ -128,7 +123,7 @@ class ExampleForm extends FormBase {
         'wrapper' => 'alex-table',
       ],
     ];
-    $form['Submit'] = [
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
       '#ajax' => [
@@ -152,7 +147,14 @@ class ExampleForm extends FormBase {
         if (array_key_exists($key, $this->calculatedCells)) {
           $value = $form_state->getValue($table_id . '][' . $i . '][' . $key, 0);
           $table[$i][$key]['#disabled'] = TRUE;
-          $table[$i][$key]['#default_value'] = 0 + round($value, 2);
+          $table[$i][$key]['#step'] = '0.01';
+          // Check for empty cells in the quarter.
+          if ($value == 0.33) {
+            $table[$i][$key]['#default_value'] = 0;
+          }
+          else {
+            $table[$i][$key]['#default_value'] = $value;
+          }
         }
         $table[$i]['year']['#default_value'] = date('Y') - $i;
       }
@@ -189,21 +191,23 @@ class ExampleForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
+    // Outputs a message if there is any errors.
     if ($form_state->getErrors()) {
       $this->messenger()->addError('Invalid');
       $form_state->clearErrors();
     }
     $values = $form_state->getValues();
+    // Counting values in cells.
     foreach ($values as $tableKey => $table) {
       foreach ($table as $rowKey => $row) {
 
         $path = $tableKey . '][' . $rowKey . '][';
 
-        $q1 = ($row['jan'] + $row['feb'] + $row['mar'] + 1) / 3;
-        $q2 = ($row['apr'] + $row['may'] + $row['jun'] + 1) / 3;
-        $q3 = ($row['jul'] + $row['aug'] + $row['sep'] + 1) / 3;
-        $q4 = ($row['oct'] + $row['nov'] + $row['dec'] + 1) / 3;
-        $ytd = ($q1 + $q2 + $q3 + $q4 + 1) / 4;
+        $q1 = round(($row['jan'] + $row['feb'] + $row['mar'] + 1) / 3, 2);
+        $q2 = round(($row['apr'] + $row['may'] + $row['jun'] + 1) / 3, 2);
+        $q3 = round(($row['jul'] + $row['aug'] + $row['sep'] + 1) / 3, 2);
+        $q4 = round(($row['oct'] + $row['nov'] + $row['dec'] + 1) / 3, 2);
+        $ytd = round(($q1 + $q2 + $q3 + $q4 + 1) / 4, 2);
 
         $form_state->setValue($path . 'q1', $q1);
         $form_state->setValue($path . 'q2', $q2);
@@ -213,7 +217,7 @@ class ExampleForm extends FormBase {
       }
     }
     $form_state->setRebuild();
-    \Drupal::messenger()->addMessage('Form is valid!');
+    $this->messenger()->addMessage('Form is valid!');
   }
 
   /**
