@@ -138,7 +138,7 @@ class ExampleForm extends FormBase {
    * Function to building rows.
    */
   public function buildRows($table_id, array &$table, FormStateInterface $form_state) {
-    for ($i = 0; $i < $this->rows; $i++) {
+    for ($i = $this->rows; $i > 0; $i--) {
       foreach ($this->header as $key => $value) {
         $table[$i][$key] = [
           '#type' => 'number',
@@ -156,7 +156,7 @@ class ExampleForm extends FormBase {
             $table[$i][$key]['#default_value'] = $value;
           }
         }
-        $table[$i]['year']['#default_value'] = date('Y') - $i;
+        $table[$i]['year']['#default_value'] = date('Y') - $i + 1;
       }
     }
   }
@@ -225,7 +225,7 @@ class ExampleForm extends FormBase {
    */
   public function updatedArray($array): array {
     $values = [];
-    for ($i = 0; $i < $this->rows; $i++) {
+    for ($i = $this->rows; $i > 0; $i--) {
       foreach ($array[$i] as $key => $value) {
         if (!array_key_exists($key, $this->calculatedCells)) {
           if ($value == "") {
@@ -259,13 +259,13 @@ class ExampleForm extends FormBase {
       for ($k = 0; $k < $nonEmpty - 1; $k++) {
         $difference = $position[$k + 1] - $position[$k];
         if ($difference != 1) {
-          $form_state->setErrorByName($k, 'The gap between values');
+          $form_state->setErrorByName($values[$k][$k], 'The gap between values');
         }
       }
     }
     for ($i = 0; $i < $this->tables - 1; $i++) {
       if ($tablesValues[$i] != $tablesValues[$i + 1]) {
-        $form_state->setErrorByName($i, 'Tables are not the same!');
+        $form_state->setErrorByName($i + 1, 'Tables are not the same!');
       }
     }
   }
